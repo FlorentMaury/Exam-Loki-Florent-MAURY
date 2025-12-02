@@ -1,23 +1,23 @@
-# Dockerfile pour le backend en production.
+# Dockerfile pour le gateway.
 FROM node:20-alpine
 
 # Définir le répertoire de travail.
-WORKDIR /app/backend
+WORKDIR /app
 
 # Copier les fichiers package.
-COPY backend/package*.json ./
+COPY package*.json ./
 
 # Installer les dépendances.
 RUN npm install --production
 
 # Copier le code source.
-COPY backend/ .
+COPY . .
 
-# Exposition du port.
-EXPOSE 5000
+# Exposition du port par défaut.
+EXPOSE 8000
 
 # Variable d'environnement pour le mode production.
 ENV NODE_ENV=production
 
-# Commande de démarrage.
+# Commande de démarrage flexible.
 CMD ["node", "server.js"]
