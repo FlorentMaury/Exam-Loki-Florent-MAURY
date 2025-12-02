@@ -1,4 +1,4 @@
-// Login page for user authentication.
+// Page de connexion pour l'authentification des utilisateurs.
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
@@ -21,7 +21,7 @@ const Login = () => {
       );
       const { token, role, username } = response.data;
 
-      // Store authentication data in localStorage.
+      // Stockage des données d'authentification dans localStorage.
       localStorage.setItem("token", token);
       localStorage.setItem("username", username);
       localStorage.setItem("role", role);
@@ -32,8 +32,8 @@ const Login = () => {
         const { message } = error.response.data;
         alert(message);
       } else {
-        console.error("Network error:", error);
-        alert("An error occurred. Please try again.");
+        console.error("Erreur réseau:", error);
+        alert("Une erreur s'est produite. Veuillez réessayer.");
       }
     }
   };
@@ -44,12 +44,12 @@ const Login = () => {
         onSubmit={handleSubmit}
         className="bg-white p-8 rounded-lg shadow-lg w-96"
       >
-        <h2 className="text-3xl font-bold mb-6 text-center text-gray-800">Login</h2>
+        <h2 className="text-3xl font-bold mb-6 text-center text-gray-800">Connexion</h2>
         <div className="mb-4">
-          <label className="block text-gray-700 font-semibold mb-2">Username</label>
+          <label className="block text-gray-700 font-semibold mb-2">Nom d'utilisateur</label>
           <input
             type="text"
-            placeholder="Enter your username"
+            placeholder="Entrez votre nom d'utilisateur"
             value={credentials.username}
             onChange={(e) =>
               setCredentials({ ...credentials, username: e.target.value })
@@ -58,10 +58,10 @@ const Login = () => {
           />
         </div>
         <div className="mb-6">
-          <label className="block text-gray-700 font-semibold mb-2">Password</label>
+          <label className="block text-gray-700 font-semibold mb-2">Mot de passe</label>
           <input
             type="password"
-            placeholder="Enter your password"
+            placeholder="Entrez votre mot de passe"
             value={credentials.password}
             onChange={(e) =>
               setCredentials({ ...credentials, password: e.target.value })
@@ -73,10 +73,10 @@ const Login = () => {
           type="submit"
           className="bg-blue-500 text-white p-3 w-full rounded font-semibold hover:bg-blue-600"
         >
-          Login
+          Connexion
         </button>
         <p className="text-center text-gray-600 mt-4">
-          No account? <a href="/register" className="text-blue-500 hover:underline">Register here</a>
+          Pas de compte? <a href="/register" className="text-blue-500 hover:underline">Inscrivez-vous ici</a>
         </p>
       </form>
     </div>
