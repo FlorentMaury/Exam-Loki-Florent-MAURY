@@ -1,4 +1,4 @@
-// src/pages/Login.js
+// Login page for user authentication.
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
@@ -21,57 +21,63 @@ const Login = () => {
       );
       const { token, role, username } = response.data;
 
-      // Stockage du token et rôle dans le localStorage
+      // Store authentication data in localStorage.
       localStorage.setItem("token", token);
       localStorage.setItem("username", username);
       localStorage.setItem("role", role);
 
-      navigate("/"); // Redirige vers la page d'accueil après la connexion
+      navigate("/");
     } catch (error) {
-      // Gestion des erreurs
       if (error.response) {
-        // Erreur renvoyée par le serveur
         const { message } = error.response.data;
-        alert(message); // Affiche un message à l'utilisateur (vous pouvez remplacer par un toast)
+        alert(message);
       } else {
-        // Erreur réseau ou autre
-        console.error("Erreur réseau ou serveur", error);
-        alert("Une erreur est survenue. Veuillez réessayer.");
+        console.error("Network error:", error);
+        alert("An error occurred. Please try again.");
       }
     }
   };
 
   return (
-    <div className="flex justify-center items-center h-screen">
+    <div className="flex justify-center items-center h-screen bg-gray-50">
       <form
         onSubmit={handleSubmit}
-        className="bg-white p-6 rounded shadow-md w-80"
+        className="bg-white p-8 rounded-lg shadow-lg w-96"
       >
-        <h2 className="text-2xl font-bold mb-4 text-center">Connexion</h2>
-        <input
-          type="text"
-          placeholder="Nom d'utilisateur"
-          value={credentials.username}
-          onChange={(e) =>
-            setCredentials({ ...credentials, username: e.target.value })
-          }
-          className="border border-gray-300 p-2 w-full mb-4"
-        />
-        <input
-          type="password"
-          placeholder="Mot de passe"
-          value={credentials.password}
-          onChange={(e) =>
-            setCredentials({ ...credentials, password: e.target.value })
-          }
-          className="border border-gray-300 p-2 w-full mb-4"
-        />
+        <h2 className="text-3xl font-bold mb-6 text-center text-gray-800">Login</h2>
+        <div className="mb-4">
+          <label className="block text-gray-700 font-semibold mb-2">Username</label>
+          <input
+            type="text"
+            placeholder="Enter your username"
+            value={credentials.username}
+            onChange={(e) =>
+              setCredentials({ ...credentials, username: e.target.value })
+            }
+            className="border border-gray-300 p-3 w-full rounded focus:outline-none focus:border-blue-500"
+          />
+        </div>
+        <div className="mb-6">
+          <label className="block text-gray-700 font-semibold mb-2">Password</label>
+          <input
+            type="password"
+            placeholder="Enter your password"
+            value={credentials.password}
+            onChange={(e) =>
+              setCredentials({ ...credentials, password: e.target.value })
+            }
+            className="border border-gray-300 p-3 w-full rounded focus:outline-none focus:border-blue-500"
+          />
+        </div>
         <button
           type="submit"
-          className="bg-blue-500 text-white p-2 w-full rounded"
+          className="bg-blue-500 text-white p-3 w-full rounded font-semibold hover:bg-blue-600"
         >
-          Se connecter
+          Login
         </button>
+        <p className="text-center text-gray-600 mt-4">
+          No account? <a href="/register" className="text-blue-500 hover:underline">Register here</a>
+        </p>
       </form>
     </div>
   );
