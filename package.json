@@ -5,6 +5,7 @@
     "start:gateway": "cd gateway && npx nodemon server.js",
     "start:backend": "cd backend && npx nodemon server.js",
     "start:frontend": "npm --prefix frontend start",
-    "start:all": "npm-run-all --parallel start:notifications start:stock-management start:gateway start:backend start:frontend"
+    "start:all": "npm-run-all --parallel start:notifications start:stock-management start:gateway start:backend start:frontend",
+    "build": "npm --prefix frontend run build"
   }
 }
