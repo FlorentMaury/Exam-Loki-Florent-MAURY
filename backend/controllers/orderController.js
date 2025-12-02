@@ -63,21 +63,9 @@ exports.createOrder = async (req, res) => {
     return res.status(400).json({ message: 'Format d\'adresse invalide.' });
   }
 
-  // Sécurité: Validation de la longueur des champs d'adresse.
-  if (street.length < 5 || street.length > 100) {
-    return res.status(400).json({ message: 'La rue doit contenir entre 5 et 100 caractères.' });
-  }
-
-  if (city.length < 2 || city.length > 50) {
-    return res.status(400).json({ message: 'La ville doit contenir entre 2 et 50 caractères.' });
-  }
-
-  if (postalCode.length < 3 || postalCode.length > 20) {
-    return res.status(400).json({ message: 'Le code postal doit contenir entre 3 et 20 caractères.' });
-  }
-
-  if (country.length < 2 || country.length > 50) {
-    return res.status(400).json({ message: 'Le pays doit contenir entre 2 et 50 caractères.' });
+  // Sécurité: Vérification que les champs d'adresse ne sont pas vides.
+  if (street.trim().length === 0 || city.trim().length === 0 || postalCode.trim().length === 0 || country.trim().length === 0) {
+    return res.status(400).json({ message: 'Les champs de l\'adresse ne peuvent pas être vides.' });
   }
 
   // Sécurité: Validation de paymentMethod (liste blanche).
