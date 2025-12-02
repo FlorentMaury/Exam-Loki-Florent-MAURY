@@ -42,7 +42,7 @@ const ShippingAddress = () => {
       <div className="space-y-2">
         <div>
           <label htmlFor="street" className="block text-sm font-medium text-gray-700">
-            Rue (5-100 caractères)
+            Rue
           </label>
           <input 
             type="text" 
@@ -56,7 +56,7 @@ const ShippingAddress = () => {
         </div>
         <div>
           <label htmlFor="city" className="block text-sm font-medium text-gray-700">
-            Ville (2-50 caractères)
+            Ville
           </label>
           <input 
             type="text" 
@@ -70,7 +70,7 @@ const ShippingAddress = () => {
         </div>
         <div>
           <label htmlFor="postalCode" className="block text-sm font-medium text-gray-700">
-            Code Postal (3-20 caractères)
+            Code Postal
           </label>
           <input 
             type="text" 
@@ -84,7 +84,7 @@ const ShippingAddress = () => {
         </div>
         <div>
           <label htmlFor="country" className="block text-sm font-medium text-gray-700">
-            Pays (2-50 caractères)
+            Pays
           </label>
           <input 
             type="text" 
