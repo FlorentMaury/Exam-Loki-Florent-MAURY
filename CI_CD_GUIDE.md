@@ -1,4 +1,51 @@
-# Guide CI/CD - Automatisation du déploiement.
+# Guide d'intégration et de déploiement continu.
+
+## Flux de déploiement automatisé.
+
+### Staging (Préproduction).
+
+- Branche: develop
+- Événement: Push sur develop
+- Actions: Construction des images Docker, vérification de la santé des services, affichage des URLs d'accès.
+
+### Production.
+
+- Branche: main
+- Événement: Push sur main ou création d'un tag
+- Actions: Construction des images Docker avec versioning, vérification de la santé des services, affichage des URLs d'accès.
+
+## Lancer un déploiement.
+
+### Déploiement manuel en staging.
+
+```bash
+npm run deploy:staging
+```
+
+### Déploiement manuel en production.
+
+```bash
+npm run deploy:production
+```
+
+### Déploiement via Git.
+
+```bash
+# Staging - Push sur develop.
+git push origin develop
+
+# Production - Push sur main.
+git push origin main
+```
+
+## Suivi du déploiement.
+
+Consultez l'onglet Actions dans votre dépôt GitHub pour voir l'état de chaque déploiement.
+
+## Voir également.
+
+Pour des informations détaillées sur la supervision des services et la configuration des alertes, consultez SUPERVISION_GUIDE.md.
+
 
 ## Flux de déploiement automatisé.
 

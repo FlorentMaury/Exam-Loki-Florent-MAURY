@@ -1,4 +1,75 @@
-# Guide Journalisation & Audit.
+# Guide de logging et d'audit.
+
+Ce guide couvre l'implémentation du logging et de l'audit dans l'application.
+
+## Voir également.
+
+Pour des informations détaillées sur la supervision des services et la configuration des alertes, consultez SUPERVISION_GUIDE.md.
+
+## Objectifs du logging.
+
+Le logging permet de tracer l'exécution de l'application et d'identifier les problèmes.
+
+- Enregistrer les tentatives de connexion réussies et échouées.
+- Enregistrer les opérations critiques (création, modification, suppression).
+- Stocker les erreurs pour le débogage.
+- Maintenir une piste d'audit pour la conformité.
+
+## Configuration du logging.
+
+### Installation des dépendances.
+
+```bash
+npm install winston morgan
+```
+
+### Winston: Logging structuré.
+
+Winston est un logger structuré pour Node.js. Il enregistre les messages dans les fichiers et la console.
+
+### Morgan: Logging HTTP.
+
+Morgan enregistre toutes les requêtes HTTP dans le fichier access.log.
+
+### Fichiers de logs.
+
+Les logs sont stockés dans le répertoire backend/logs.
+
+- error.log: Erreurs uniquement.
+- combined.log: Tous les logs (info, warn, error).
+- access.log: Requêtes HTTP.
+
+## Audit trail.
+
+L'audit trail enregistre les actions critiques de l'utilisateur.
+
+### Actions auditées.
+
+- LOGIN: Tentatives de connexion (succès et échecs).
+- ORDER_CREATED: Création de commande avec montant et articles.
+- SECURITY: Événements de sécurité (accès non autorisé, etc).
+
+### Format de l'audit.
+
+Chaque entrée d'audit contient.
+
+- Timestamp
+- Type d'action
+- ID utilisateur
+- Détails de l'action
+- Statut (succès ou échec)
+
+## Maintenance des logs.
+
+Les logs doivent être régulièrement archivés et nettoyés pour économiser l'espace disque.
+
+## Variables d'environnement.
+
+```env
+LOG_LEVEL=info
+NODE_ENV=production
+```
+
 
 ## Système de logging configuré.
 
