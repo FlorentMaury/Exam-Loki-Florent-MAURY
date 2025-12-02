@@ -1,9 +1,9 @@
-name: Test Build.
+name: Test Build
 
 on:
   pull_request:
     branches:
-      - develop
+      - development
       - main
 
 jobs:
@@ -11,47 +11,37 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # Récupération du code source.
       - name: Checkout code
         uses: actions/checkout@v3
 
-      # Configuration de Node.js.
       - name: Set up Node.js
         uses: actions/setup-node@v3
         with:
           node-version: '20'
           cache: 'npm'
 
-      # Installation des dépendances backend.
       - name: Install backend dependencies
         run: cd backend && npm install
 
-      # Installation des dépendances frontend.
       - name: Install frontend dependencies
         run: cd frontend && npm install
 
-      # Construction du frontend.
       - name: Build frontend
         run: cd frontend && npm run build
 
-      # Installation des dépendances microservices notifications.
       - name: Install notifications microservice dependencies
         run: cd microservices/notifications && npm install
 
-      # Installation des dépendances microservices stock-management.
       - name: Install stock-management microservice dependencies
         run: cd microservices/stock-management && npm install
 
-      # Installation des dépendances gateway.
       - name: Install gateway dependencies
         run: cd gateway && npm install
 
-      # Notification de succès.
       - name: Notify test success
         if: success()
-        run: echo "✅ Les tests de build sont réussis."
+        run: echo "Build test passed."
 
-      # Notification d'erreur.
       - name: Notify test failure
         if: failure()
-        run: echo "❌ Erreur lors des tests de build."
+        run: echo "Build test failed."
