@@ -20,10 +20,8 @@ exports.authenticateToken = (req, res, next) => {
     return res.status(403).json({ message: 'Token invalide.' });
   }
 };
-  }
-};
 
 exports.isAdmin = (req, res, next) => {
-  if (req.user.role !== 'admin') return res.status(403).json({ message: 'Accès interdit' });
+  if (req.user.role !== 'admin') return res.status(403).json({ message: 'Accès interdit.' });
   next();
 };
