@@ -114,9 +114,65 @@ services:
       - exam_network_preprod
     restart: unless-stopped
 
+  # Prometheus pour la supervision.
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: exam_prometheus_preprod
+    ports:
+      - '9090:9090'
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+      - ./alert-rules.yml:/etc/prometheus/alert-rules.yml
+      - prometheus_data_preprod:/prometheus
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+    networks:
+      - exam_network_preprod
+    restart: unless-stopped
+
+  # AlertManager pour les alertes.
+  alertmanager:
+    image: prom/alertmanager:latest
+    container_name: exam_alertmanager_preprod
+    ports:
+      - '9093:9093'
+    volumes:
+      - ./alertmanager.yml:/etc/alertmanager/alertmanager.yml
+      - alertmanager_data_preprod:/alertmanager
+    command:
+      - '--config.file=/etc/alertmanager/alertmanager.yml'
+      - '--storage.path=/alertmanager'
+    environment:
+      SLACK_WEBHOOK_URL: ${SLACK_WEBHOOK_URL}
+    networks:
+      - exam_network_preprod
+    restart: unless-stopped
+
+  # Grafana pour la visualisation des métriques.
+  grafana:
+    image: grafana/grafana:latest
+    container_name: exam_grafana_preprod
+    ports:
+      - '3001:3000'
+    environment:
+      GF_SECURITY_ADMIN_USER: admin
+      GF_SECURITY_ADMIN_PASSWORD: admin
+      GF_USERS_ALLOW_SIGN_UP: 'false'
+    volumes:
+      - grafana_data_preprod:/var/lib/grafana
+    depends_on:
+      - prometheus
+    networks:
+      - exam_network_preprod
+    restart: unless-stopped
+
 volumes:
   mongo_data_preprod:
   mongo_config_preprod:
+  prometheus_data_preprod:
+  alertmanager_data_preprod:
+  grafana_data_preprod:
 
 networks:
   exam_network_preprod:

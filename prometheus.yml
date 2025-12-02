@@ -1,0 +1,54 @@
+# Configuration Prometheus pour la supervision des services.
+global:
+  scrape_interval: 15s
+  evaluation_interval: 15s
+  external_labels:
+    monitor: 'exam-monitoring'
+
+# Alertes à évaluer.
+rule_files:
+  - 'alert-rules.yml'
+
+# Configuration des alertes.
+alerting:
+  alertmanagers:
+    - static_configs:
+        - targets:
+            - alertmanager:9093
+
+scrape_configs:
+  # Scrape Prometheus lui-même.
+  - job_name: 'prometheus'
+    static_configs:
+      - targets: ['localhost:9090']
+
+  # Scrape le backend.
+  - job_name: 'backend'
+    static_configs:
+      - targets: ['backend:5000']
+    metrics_path: '/metrics'
+
+  # Scrape le frontend.
+  - job_name: 'frontend'
+    static_configs:
+      - targets: ['frontend:3000']
+
+  # Scrape MongoDB.
+  - job_name: 'mongodb'
+    static_configs:
+      - targets: ['mongo:27017']
+
+  # Scrape les notifications.
+  - job_name: 'notifications'
+    static_configs:
+      - targets: ['notifications:4002']
+
+  # Scrape le stock-management.
+  - job_name: 'stock-management'
+    static_configs:
+      - targets: ['stock-management:4003']
+
+  # Scrape la gateway.
+  - job_name: 'gateway'
+    static_configs:
+      - targets: ['gateway:8000']

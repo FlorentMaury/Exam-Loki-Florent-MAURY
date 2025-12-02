@@ -1,0 +1,84 @@
+# Règles d'alerte pour la supervision.
+groups:
+  - name: exam_alerts
+    interval: 30s
+    rules:
+      # Alerte: Conteneur arrêté.
+      - alert: ContainerDown
+        expr: up == 0
+        for: 2m
+        labels:
+          severity: critical
+        annotations:
+          summary: 'Le conteneur {{ $labels.job }} est arrêté.'
+          description: 'Le service {{ $labels.job }} n\'est pas accessible depuis 2 minutes.'
+
+      # Alerte: Taux d'erreur HTTP élevé.
+      - alert: HighErrorRate
+        expr: rate(http_requests_total{status=~"5.."}[5m]) > 0.05
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: 'Taux d\'erreur HTTP élevé sur {{ $labels.job }}.'
+          description: 'Le taux d\'erreur HTTP 5xx est supérieur à 5% pendant 5 minutes.'
+
+      # Alerte: Latence API élevée.
+      - alert: HighLatency
+        expr: histogram_quantile(0.95, rate(http_request_duration_seconds_bucket[5m])) > 2
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: 'Latence API élevée sur {{ $labels.job }}.'
+          description: 'Le 95e centile de latence dépasse 2 secondes.'
+
+      # Alerte: Utilisation CPU élevée.
+      - alert: HighCPUUsage
+        expr: (100 - (avg by (instance) (irate(node_cpu_seconds_total{mode="idle"}[5m])) * 100)) > 80
+        for: 10m
+        labels:
+          severity: warning
+        annotations:
+          summary: 'Utilisation CPU élevée sur {{ $labels.instance }}.'
+          description: 'L\'utilisation CPU dépasse 80% depuis 10 minutes.'
+
+      # Alerte: Espace disque insuffisant.
+      - alert: LowDiskSpace
+        expr: (node_filesystem_avail_bytes{mountpoint="/"} / node_filesystem_size_bytes{mountpoint="/"}) < 0.1
+        for: 5m
+        labels:
+          severity: critical
+        annotations:
+          summary: 'Espace disque insuffisant.'
+          description: 'L\'espace disque disponible est inférieur à 10%.'
+
+      # Alerte: Mémoire insuffisante.
+      - alert: LowMemory
+        expr: (node_memory_MemAvailable_bytes / node_memory_MemTotal_bytes) < 0.1
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: 'Mémoire insuffisante sur {{ $labels.instance }}.'
+          description: 'La mémoire disponible est inférieur à 10%.'
+
+      # Alerte: MongoDB indisponible.
+      - alert: MongoDBDown
+        expr: up{job="mongodb"} == 0
+        for: 2m
+        labels:
+          severity: critical
+        annotations:
+          summary: 'MongoDB est indisponible.'
+          description: 'La base de données MongoDB n\'est pas accessible.'
+
+      # Alerte: Nombre de connexions MongoDB élevé.
+      - alert: HighMongoDBConnections
+        expr: mongodb_connections{state="current"} > 80
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: 'Nombre élevé de connexions MongoDB.'
+          description: 'Plus de 80 connexions actives à MongoDB.'

@@ -6,6 +6,7 @@ const rateLimit = require('express-rate-limit');
 const morgan = require('morgan');
 const fs = require('fs');
 const path = require('path');
+const promClient = require('prom-client');
 require('dotenv').config();
 const connectDB = require('./config/db');
 const logger = require('./config/logger');
@@ -18,6 +19,46 @@ const logsDir = path.join(__dirname, 'logs');
 if (!fs.existsSync(logsDir)) {
   fs.mkdirSync(logsDir);
 }
+
+// Métriques Prometheus: Initialiser les collecteurs par défaut.
+promClient.collectDefaultMetrics({ timeout: 5000 });
+
+// Métriques personnalisées pour les requêtes HTTP.
+const httpRequestDuration = new promClient.Histogram({
+  name: 'http_request_duration_seconds',
+  help: 'Durée des requêtes HTTP en secondes.',
+  labelNames: ['method', 'route', 'status_code'],
+  buckets: [0.1, 0.5, 1, 2, 5],
+});
+
+const httpRequestTotal = new promClient.Counter({
+  name: 'http_requests_total',
+  help: 'Nombre total de requêtes HTTP.',
+  labelNames: ['method', 'route', 'status_code'],
+});
+
+// Middleware Prometheus: Enregistrer les métriques des requêtes.
+app.use((req, res, next) => {
+  const startTime = Date.now();
+  
+  res.on('finish', () => {
+    const duration = (Date.now() - startTime) / 1000;
+    httpRequestDuration
+      .labels(req.method, req.route?.path || req.path, res.statusCode)
+      .observe(duration);
+    httpRequestTotal
+      .labels(req.method, req.route?.path || req.path, res.statusCode)
+      .inc();
+  });
+  
+  next();
+});
+
+// Endpoint Prometheus: Exporter les métriques.
+app.get('/metrics', async (req, res) => {
+  res.set('Content-Type', promClient.register.contentType);
+  res.end(await promClient.register.metrics());
+});
 
 // Logging: Morgan pour les requêtes HTTP.
 const accessLogStream = fs.createWriteStream(path.join(logsDir, 'access.log'), { flags: 'a' });
